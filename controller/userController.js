@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
@@ -49,7 +50,43 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
-const login = asyncHandler(async (req, res) => {});
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  //validasi email dan password
+  if (!email || !password) {
+    return res.status(400).json({
+      status: false,
+      message: "Email dan password wajib diisi",
+    });
+  }
+
+  //cek email
+  const user = await User.findOne({ email });
+  //cek email dan password yang sudah di hashing
+  if (user && (await bcrypt.compare(password, user.password))) {
+    const accessToken = jwt.sign(
+      {
+        //payload data
+        user: {
+          username: user.username,
+          email: user.email,
+          id: user.id,
+        },
+      },
+      //secret unique
+      process.env.ACCESS_TOKEN_SECRET,
+
+      //token expired
+      { expiresIn: "15m" }
+    );
+
+    return res.status(200).json({
+      status: true,
+      message: "Login success",
+      accessToken: accessToken,
+    });
+  }
+});
 
 const current = asyncHandler(async (req, res) => {});
 
