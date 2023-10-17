@@ -1,18 +1,34 @@
 const asyncHandler = require("express-async-handler");
+const Post = require("../models/postModel");
 
 const getAllPostHandler = asyncHandler(async (req, res) => {
+  const post = await Post.find({});
   res.status(200).json({
     status: true,
     message: "success",
-    data: "get all data",
+    data: post,
   });
 });
 
+//@desc add post
+//@route GET /api/posts
+//@access public
 const addPostHandler = asyncHandler(async (req, res) => {
+  //cek validasi
+  const { title, content, author } = req.body;
+  if (!title || !content || !author) {
+    res.status(400).json({
+      status: false,
+      message: "validation error",
+      data: "title dan author wajib diisi",
+    });
+  }
+
+  const post = await Post.create(req.body);
   res.status(201).json({
     status: true,
     message: "success",
-    data: "get post data",
+    data: post,
   });
 });
 
