@@ -33,8 +33,8 @@ Belajar backend api membuat rest api blog/post
 5. setup .env
     ```
     PORT = 3000
-    CONNECTION_STRING = mongodb://127.0.0.1:27017/blogs
-    ACCESS_TOKEN_SECRET = LoginSecretBebas
+    CONNECTION_STRING = mongodb:/host:port/blogs
+    ACCESS_TOKEN_SECRET = bebas
     ```
 6. Start the server:
     ```
