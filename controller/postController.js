@@ -3,13 +3,16 @@ const Post = require("../models/postModel");
 
 //@desc get all post
 //@route GET /api/posts
-//@access public
+//@access private
 const getAllPostHandler = asyncHandler(async (req, res) => {
-  const post = await Post.find({}).sort({ createdAt: -1 });
+  //get all post berdasarkan user yang login
+  const posts = await Post.find({ author: req.user.username }).sort({
+    createdAt: -1,
+  });
   return res.status(200).json({
     status: true,
     message: "success",
-    data: post,
+    data: posts,
   });
 });
 
@@ -18,8 +21,8 @@ const getAllPostHandler = asyncHandler(async (req, res) => {
 //@access public
 const addPostHandler = asyncHandler(async (req, res) => {
   //cek validasi
-  const { title, content, author } = req.body;
-  if (!title || !content || !author) {
+  const { title, content, author, tags, thumbnail } = req.body;
+  if (!title || !content) {
     return res.status(400).json({
       status: false,
       message: "validation error",
@@ -27,7 +30,13 @@ const addPostHandler = asyncHandler(async (req, res) => {
     });
   }
 
-  const post = await Post.create(req.body);
+  const post = await Post.create({
+    title,
+    content,
+    author: req.user.username,
+    tags,
+    thumbnail,
+  });
   return res.status(201).json({
     status: true,
     message: "success",
@@ -45,10 +54,19 @@ const getPostByIdHandler = asyncHandler(async (req, res) => {
   if (!post) {
     return res.status(404).json({
       status: false,
-      message: "Not Found",
+      message: "Post Not Found",
     });
   }
 
+  //jika post dimiliki oleh pengguna lain
+  if (post.author !== req.user.username) {
+    return res.status(403).json({
+      status: false,
+      message: "Access denied, post does not belong to the logged-in user",
+    });
+  }
+
+  //success
   return res.status(200).json({
     status: true,
     message: "success",
@@ -67,6 +85,15 @@ const updatePostByIdHandler = asyncHandler(async (req, res) => {
     return res.status(404).json({
       status: false,
       message: "Not Found!",
+    });
+  }
+
+  //jika post milik author lain
+  //jika post dimiliki oleh pengguna lain
+  if (post.author !== req.user.username) {
+    return res.status(403).json({
+      status: false,
+      message: "Access denied, post does not belong to the logged-in user",
     });
   }
 
@@ -94,6 +121,14 @@ const deletePostByIdHandler = asyncHandler(async (req, res) => {
     return res.status(404).json({
       status: false,
       message: "Not Found!",
+    });
+  }
+
+  //jika post dimiliki oleh pengguna lain
+  if (post.author !== req.user.username) {
+    return res.status(403).json({
+      status: false,
+      message: "Access denied, post does not belong to the logged-in user",
     });
   }
 

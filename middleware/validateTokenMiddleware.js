@@ -23,7 +23,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
 
       //menyimpan informasi pengguna
       req.user = decode.user;
-      console.log(decode);
+      //   console.log(decode);
 
       //lanjut ke middleware selanjutnya
       next();
