@@ -54,6 +54,57 @@ Belajar backend api membuat rest api blog/post
 - DELETE by Id ```http://localhost:3000/api/posts/652ea17f61fd23031ed735cf```
 - GET All access public ```http://localhost:3000/api/posts/all```
 
+## Api
+- register 
+    ```
+    {
+    "username":"yourusername",
+    "email":"email@test.com",
+    "password":"12345678"
+    } 
+    ```
+- login 
+    ```
+    {
+    "email":"email@test.com",
+    "password":"12345678"
+    } 
+    ```
+- add post / update
+    ```
+    {
+    "title":"express  Pemula",
+    "content":"ini adalah contoh content dari express pemula",
+    "tags":[
+        "code","programmer","fullstack","javascript"
+    ],
+    "thumbnail":"jspicture.jpg"
+    }
+    ```
+    
+- output get by id
+    ```
+    {
+        "status": true,
+        "message": "success",
+        "data": {
+            "_id": "652eb805b3fa814c61902feb",
+            "title": "express  Pemula",
+            "content": "ini adalah contoh content dari express pemula",
+            "author": "alvianda",
+            "tags": [
+                "code",
+                "programmer",
+                "fullstack",
+                "javascript"
+            ],
+            "thumbnail": "jspicture.jpg",
+            "createdAt": "2023-10-17T16:36:21.585Z",
+            "updatedAt": "2023-10-17T16:36:21.585Z",
+            "__v": 0
+        }
+    }
+    ```
 
 ## credits
 
