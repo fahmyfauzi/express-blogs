@@ -2,6 +2,21 @@ const asyncHandler = require("express-async-handler");
 const Post = require("../models/postModel");
 
 //@desc get all post
+//@route GET /api/posts/all
+//@access public
+const getAllPostPublicHandler = asyncHandler(async (req, res) => {
+  //get all post berdasarkan user yang login
+  const posts = await Post.find().sort({
+    createdAt: -1,
+  });
+  return res.status(200).json({
+    status: true,
+    message: "success",
+    data: posts,
+  });
+});
+
+//@desc get all post
 //@route GET /api/posts
 //@access private
 const getAllPostHandler = asyncHandler(async (req, res) => {
@@ -146,4 +161,5 @@ module.exports = {
   getPostByIdHandler,
   updatePostByIdHandler,
   deletePostByIdHandler,
+  getAllPostPublicHandler,
 };
