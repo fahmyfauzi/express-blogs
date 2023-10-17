@@ -1,5 +1,5 @@
 const constants = require("../constants");
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
   //status code yang dikirim dari controller kalau tidak ada maka default 500
   const statusCode = res.statusCode ? res.statusCode : constants.SERVER_ERROR;
 
