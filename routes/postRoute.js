@@ -8,6 +8,10 @@ const {
   updatePostByIdHandler,
   deletePostByIdHandler,
 } = require("../controller/postController");
+const validateToken = require("../middleware/validateTokenMiddleware");
+
+//middleware validate token
+router.use(validateToken);
 
 router.get("/", getAllPostHandler);
 router.route("/").get(getAllPostHandler).post(addPostHandler);

@@ -88,7 +88,12 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
-const current = asyncHandler(async (req, res) => {});
+const current = asyncHandler(async (req, res) => {
+  return res.status(200).json({
+    status: true,
+    message: `Information a user ${req.user.username}`,
+  });
+});
 
 module.exports = {
   register,
