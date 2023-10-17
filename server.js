@@ -1,5 +1,6 @@
 const express = require("express");
 const routePost = require("./routes/postRoute");
+const routeUser = require("./routes/userRoute");
 const errorHandler = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 require("dotenv").config();
@@ -11,8 +12,11 @@ app.use(express.json());
 //middleware error
 app.use(errorHandler);
 
-//middleware route
+//middleware route posts
 app.use("/api/posts", routePost);
+
+//middleware route users
+app.use("/api/user", routeUser);
 
 //connect DB
 connectDB();
