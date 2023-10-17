@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const Post = require("../models/postModel");
 
+//@desc get all post
+//@route GET /api/posts
+//@access public
 const getAllPostHandler = asyncHandler(async (req, res) => {
   const post = await Post.find({});
   res.status(200).json({
@@ -11,7 +14,7 @@ const getAllPostHandler = asyncHandler(async (req, res) => {
 });
 
 //@desc add post
-//@route GET /api/posts
+//@route POST /api/posts
 //@access public
 const addPostHandler = asyncHandler(async (req, res) => {
   //cek validasi
@@ -32,19 +35,45 @@ const addPostHandler = asyncHandler(async (req, res) => {
   });
 });
 
+//@desc get post by id
+//@route POST /api/posts/:id
+//@access public
 const getPostByIdHandler = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
   res.status(200).json({
     status: true,
     message: "success",
-    data: "get post data by id",
+    data: post,
   });
 });
 
+//@desc update post
+//@route PUT /api/posts
+//@access public
 const updatePostByIdHandler = asyncHandler(async (req, res) => {
+  //cari id
+  const postId = await Post.findById(req.params.id);
+  //jika id tidak ditemukan
+  if (!postId) {
+    res.status(404).json({
+      status: false,
+      message: "Not Found!",
+    });
+  }
+
+  //update post
+  const updatePost = await Post.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true } // mengembalikan dokumen yang diperbarui setelah perubahan tersebut diterapkan.
+  );
+
+  //response yang sudah terupdate
+  const post = await Post.findById(req.params.id);
   res.status(200).json({
     status: true,
     message: "success",
-    data: " update data",
+    data: post,
   });
 });
 
