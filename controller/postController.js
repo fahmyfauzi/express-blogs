@@ -5,8 +5,8 @@ const Post = require("../models/postModel");
 //@route GET /api/posts
 //@access public
 const getAllPostHandler = asyncHandler(async (req, res) => {
-  const post = await Post.find({});
-  res.status(200).json({
+  const post = await Post.find({}).sort({ createdAt: -1 });
+  return res.status(200).json({
     status: true,
     message: "success",
     data: post,
@@ -20,7 +20,7 @@ const addPostHandler = asyncHandler(async (req, res) => {
   //cek validasi
   const { title, content, author } = req.body;
   if (!title || !content || !author) {
-    res.status(400).json({
+    return res.status(400).json({
       status: false,
       message: "validation error",
       data: "title dan author wajib diisi",
@@ -28,7 +28,7 @@ const addPostHandler = asyncHandler(async (req, res) => {
   }
 
   const post = await Post.create(req.body);
-  res.status(201).json({
+  return res.status(201).json({
     status: true,
     message: "success",
     data: post,
@@ -39,8 +39,17 @@ const addPostHandler = asyncHandler(async (req, res) => {
 //@route POST /api/posts/:id
 //@access public
 const getPostByIdHandler = asyncHandler(async (req, res) => {
+  //cari id
   const post = await Post.findById(req.params.id);
-  res.status(200).json({
+  //jika id tidak ditemukan
+  if (!post) {
+    return res.status(404).json({
+      status: false,
+      message: "Not Found",
+    });
+  }
+
+  return res.status(200).json({
     status: true,
     message: "success",
     data: post,
@@ -55,7 +64,7 @@ const updatePostByIdHandler = asyncHandler(async (req, res) => {
   const postId = await Post.findById(req.params.id);
   //jika id tidak ditemukan
   if (!postId) {
-    res.status(404).json({
+    return res.status(404).json({
       status: false,
       message: "Not Found!",
     });
@@ -70,7 +79,7 @@ const updatePostByIdHandler = asyncHandler(async (req, res) => {
 
   //response yang sudah terupdate
   const post = await Post.findById(req.params.id);
-  res.status(200).json({
+  return res.status(200).json({
     status: true,
     message: "success",
     data: post,
@@ -78,10 +87,21 @@ const updatePostByIdHandler = asyncHandler(async (req, res) => {
 });
 
 const deletePostByIdHandler = asyncHandler(async (req, res) => {
-  res.status(200).json({
+  //cari id post
+  const postId = await Post.findById(req.params.id);
+  // jika id tidak ditemukan
+  if (!postId) {
+    return res.status(404).json({
+      status: false,
+      message: "Not Found!",
+    });
+  }
+
+  const post = await Post.findByIdAndRemove(req.params.id);
+
+  return res.status(200).json({
     status: true,
     message: "success",
-    data: "delete data",
   });
 });
 
